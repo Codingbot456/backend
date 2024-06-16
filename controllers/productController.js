@@ -5,39 +5,24 @@ const db = require('../config/db');
 
 
 
+// Create Product
 exports.createProduct = (req, res) => {
     const { name, price, description, category_id, subcategory_id } = req.body;
     const imageUrl = req.file ? `${process.env.BACKEND_URL}/images/${req.file.filename}` : null;
 
-    if (!name || !price || !description || !category_id || !subcategory_id) {
-        return res.status(400).json({ error: 'Missing required fields' });
-    }
-
-    const query = `
-        INSERT INTO products (name, price, description, image_url, category_id, subcategory_id)
-        VALUES (?, ?, ?, ?, ?, ?)
-    `;
-    const values = [name, price, description, imageUrl, category_id, subcategory_id];
-
-    db.getConnection((err, connection) => {
-        if (err) {
-            console.error('Error getting database connection:', err);
-            return res.status(500).json({ error: 'Database connection error' });
-        }
-
-        connection.query(query, values, (err, results) => {
-            connection.release();
-
+    db.query(
+        'INSERT INTO products (name, price, description, image_url, category_id, subcategory_id) VALUES (?, ?, ?, ?, ?, ?)',
+        [name, price, description, imageUrl, category_id, subcategory_id],
+        (err, results) => {
             if (err) {
-                console.error('Database Error:', err);
-                return res.status(500).json({ error: 'Database error' });
+                console.error(err);
+                res.status(500).json({ error: 'Database error' });
+            } else {
+                res.json({ message: 'Product created successfully' });
             }
-
-            res.json({ message: 'Product created successfully' });
-        });
-    });
+        }
+    );
 };
-
 
 // Get Products
 exports.getProducts = (req, res) => {
