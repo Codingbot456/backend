@@ -1,11 +1,9 @@
-
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const bodyParser = require('body-parser');
-require('dotenv').config();
+require('dotenv').config(); // Load environment variables from .env file
 const app = express();
-const PORT = 7000;
 
 const authRoutes = require('./routes/authRoutes');
 const productRoutes = require('./routes/productRoutes');
@@ -13,8 +11,7 @@ const apiRouter = require('./routes/api');
 const orderRoutes = require('./routes/orderRoutes');
 const searchRoutes = require('./routes/searchRoutes');
 
-
-  
+const PORT = process.env.PORT || 3000; // Default to 3000 if PORT is not set in .env
 
 // Middleware
 app.use(bodyParser.json());
@@ -30,7 +27,7 @@ app.use('/', apiRouter);
 app.use('/api/orders', orderRoutes);
 app.use('/api', searchRoutes);
 
-// Add more protected routes as needed
+// Add more routes and middleware as needed
 
 // Start the server
 app.listen(PORT, () => {
