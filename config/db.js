@@ -1,8 +1,13 @@
 const mysql = require('mysql');
 require('dotenv').config();
 
-// Create MySQL connection using MYSQL_URL from environment variables
-const connection = mysql.createConnection(process.env.MYSQL_URL);
+const connection = mysql.createConnection({
+    host: process.env.MYSQLHOST,
+    port: process.env.MYSQLPORT,
+    user: process.env.MYSQLUSER,
+    password: process.env.MYSQLPASSWORD,
+    database: process.env.MYSQLDATABASE
+});
 
 connection.connect((err) => {
     if (err) {
